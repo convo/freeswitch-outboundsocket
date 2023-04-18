@@ -1,7 +1,8 @@
 defmodule EventSocketOutbound.Protocol do
   use GenServer
 
-  @moduledoc """
+  require Logger
+ @moduledoc """
   Protocol handler starts a connection process and defines logic for FreeSWITCH events and protocol.
   """
   @behaviour :ranch_protocol
@@ -12,12 +13,8 @@ defmodule EventSocketOutbound.Protocol do
   """
   @spec connect(pid) :: term
   def connect(pid) do
-    GenServer.call(pid, {:connect})
+    GenServer.call(pid, :connect)
   end
-
-  # def auth(pid, args) do
-  #  GenServer.call(pid, {{:auth}, {args}})
-  # end
 
   @doc """
   Filtered events will come to the app.
@@ -25,7 +22,7 @@ defmodule EventSocketOutbound.Protocol do
   """
   @spec filter(pid, String.t()) :: term
   def filter(pid, args) do
-    GenServer.call(pid, {{:filter}, {args}})
+    GenServer.call(pid, {:filter, args})
   end
 
   @doc """
@@ -34,7 +31,7 @@ defmodule EventSocketOutbound.Protocol do
   """
   @spec linger(pid, String.t()) :: term
   def linger(pid, args \\ "") do
-    GenServer.call(pid, {{:linger}, {args}})
+    GenServer.call(pid, {:linger, args})
   end
 
   @doc """
@@ -43,7 +40,7 @@ defmodule EventSocketOutbound.Protocol do
   """
   @spec eventplain(pid, String.t()) :: term
   def eventplain(pid, args) do
-    GenServer.call(pid, {{:eventplain}, {args}})
+    GenServer.call(pid, {:eventplain, args})
   end
 
   @doc """
@@ -52,7 +49,7 @@ defmodule EventSocketOutbound.Protocol do
   """
   @spec myevents(pid) :: term
   def myevents(pid) do
-    GenServer.call(pid, {:myevents})
+    GenServer.call(pid, :myevents)
   end
 
   @doc """
@@ -61,7 +58,7 @@ defmodule EventSocketOutbound.Protocol do
   """
   @spec execute(pid, String.t(), String.t()) :: term
   def execute(pid, command, args) do
-    GenServer.call(pid, {{:execute}, {command, args}})
+    GenServer.call(pid, {:execute, {command, args}})
   end
 
   @doc """
@@ -70,7 +67,7 @@ defmodule EventSocketOutbound.Protocol do
   """
   @spec api(pid, String.t(), String.t()) :: term
   def api(pid, command, args) do
-    GenServer.call(pid, {{:api}, {command, args}})
+    GenServer.call(pid, {:api, {command, args}})
   end
 
   @doc """
@@ -79,7 +76,7 @@ defmodule EventSocketOutbound.Protocol do
   """
   @spec conference(pid, String.t()) :: term
   def conference(pid, args) do
-    GenServer.call(pid, {{:conference}, {args}})
+    GenServer.call(pid, {:conference, args})
   end
 
   @doc """
@@ -88,7 +85,7 @@ defmodule EventSocketOutbound.Protocol do
   """
   @spec hangup(pid, String.t()) :: term
   def hangup(pid, reason \\ "") do
-    GenServer.call(pid, {{:hangup}, {reason}})
+    GenServer.call(pid, {:hangup, reason})
   end
 
   @doc """
@@ -97,7 +94,7 @@ defmodule EventSocketOutbound.Protocol do
   """
   @spec answer(pid) :: term
   def answer(pid) do
-    GenServer.call(pid, {:answer})
+    GenServer.call(pid, :answer)
   end
 
   @spec start_link(reference, module, any) :: {:ok, pid}
@@ -145,64 +142,54 @@ defmodule EventSocketOutbound.Protocol do
     {:ok, args}
   end
 
-  def handle_call({{:execute}, {command, args}}, from, %{cmds: cmds} = state) do
+  def handle_call({:execute, {command, args}}, from, %{cmds: cmds} = state) do
     sendmsg(state, command, args: args, lock: "true")
     {:noreply, %{state | cmds: cmds ++ [{from, "execute"}]}}
   end
 
-  def handle_call({{:api}, {command, args}}, from, %{cmds: cmds} = state) do
+  def handle_call({:api, {command, args}}, from, %{cmds: cmds} = state) do
     sendcmd(state, "api " <> command <> " " <> args)
     {:noreply, %{state | cmds: cmds ++ [{from, "api"}]}}
   end
 
-  def handle_call({{:hangup}, {reason}}, from, %{cmds: cmds} = state) do
-    cmd = Atom.to_string(:hangup)
-    sendmsg(state, cmd, args: reason, lock: "true")
-    {:noreply, %{state | cmds: cmds ++ [{from, cmd}]}}
+  def handle_call({:hangup, reason}, from, %{cmds: cmds} = state) do
+    sendmsg(state, "hangup", args: reason, lock: "true")
+    {:noreply, %{state | cmds: cmds ++ [{from, "hangup"}]}}
   end
 
-  def handle_call({{:conference}, {reason}}, from, %{cmds: cmds} = state) do
-    cmd = Atom.to_string(:conference)
-    sendmsg(state, cmd, args: reason, lock: "true")
-    {:noreply, %{state | cmds: cmds ++ [{from, cmd}]}}
+  def handle_call({:conference, reason}, from, %{cmds: cmds} = state) do
+    sendmsg(state, "conference", args: reason, lock: "true")
+    {:noreply, %{state | cmds: cmds ++ [{from, "conference"}]}}
   end
 
-  def handle_call({:connect}, from, %{cmds: cmds} = state) do
-    cmd = Atom.to_string(:connect)
-    sendcmd(state, cmd)
-    {:noreply, %{state | cmds: cmds ++ [{from, cmd}]}}
+  def handle_call(:connect, from, %{cmds: cmds} = state) do
+    sendcmd(state, "connect")
+    {:noreply, %{state | cmds: cmds ++ [{from, "connect"}]}}
   end
 
-  def handle_call({:myevents}, from, %{cmds: cmds} = state) do
-    cmd = Atom.to_string(:myevents)
-    sendcmd(state, cmd)
-    {:noreply, %{state | cmds: cmds ++ [{from, cmd}]}}
+  def handle_call(:myevents, from, %{cmds: cmds} = state) do
+    sendcmd(state, "myevents")
+    {:noreply, %{state | cmds: cmds ++ [{from, "myevents"}]}}
   end
 
-  def handle_call({{:linger}, {args}}, from, %{cmds: cmds} = state) do
+  def handle_call({:linger, args}, from, %{cmds: cmds} = state) do
     sendcmd(state, "linger " <> args)
     {:noreply, %{state | cmds: cmds ++ [{from, "linger"}]}}
   end
 
-  def handle_call({{:filter}, {args}}, from, %{cmds: cmds} = state) do
+  def handle_call({:filter, args}, from, %{cmds: cmds} = state) do
     sendcmd(state, "filter " <> args)
     {:noreply, %{state | cmds: cmds ++ [{from, "filter"}]}}
   end
 
-  # def handle_call({{:auth}, {args}}, from, %{cmds: cmds} = state) do
-  #  sendcmd(state, "auth " <> args)
-  #  {:noreply, %{state | cmds: cmds ++ [{from, "filter"}]}}
-  # end
-
-  def handle_call({{:eventplain}, {args}}, from, %{cmds: cmds} = state) do
+  def handle_call({:eventplain, args}, from, %{cmds: cmds} = state) do
     sendcmd(state, "event plain " <> args)
     {:noreply, %{state | cmds: cmds ++ [{from, "eventplain"}]}}
   end
 
-  def handle_call({:answer}, from, %{cmds: cmds} = state) do
-    cmd = Atom.to_string(:answer)
-    sendmsg(state, cmd, lock: "true")
-    {:noreply, %{state | cmds: cmds ++ [{from, cmd}]}}
+  def handle_call(:answer, from, %{cmds: cmds} = state) do
+    sendmsg(state, "answer", lock: "true")
+    {:noreply, %{state | cmds: cmds ++ [{from, "answer"}]}}
   end
 
   def handle_info({:tcp, _sock, data}, %{buffer: buffer} = state) do
@@ -216,6 +203,7 @@ defmodule EventSocketOutbound.Protocol do
         %{socket: socket, transport: transport} = state
       ) do
     transport.close(socket)
+
     {:stop, :shutdown, state}
   end
 
@@ -347,6 +335,7 @@ defmodule EventSocketOutbound.Protocol do
   end
 
   defp build_event_cb_response(%{disconnect: true} = state) do
+    Logger.debug("Disconnecting from FreeSWITCH with buffer: #{state.buffer}")
     {:stop, :shutdown, state}
   end
 
@@ -388,6 +377,7 @@ defmodule EventSocketOutbound.Protocol do
 
   defp event_cb(%{"Content-Type" => "text/event-plain"} = event, state) do
     call_mgt_adapter = state.call_mgt_adapter
+    Logger.info("text/event-plain received, called call_mgt_adapter.onEvent")
     call_mgt_adapter.onEvent(state.call_mgt, event)
     state
   end
@@ -396,12 +386,13 @@ defmodule EventSocketOutbound.Protocol do
     Enum.each(state.cmds, fn cmd ->
       GenServer.reply(elem(cmd, 0), {:error, "text/disconnect-notice"})
     end)
-
+    Logger.info("Disconnect notice received")
     %{state | disconnect: true}
   end
 
-  defp event_cb(_event, state) do
+  defp event_cb(event, state) do
     state
+    Logger.error("event_cb #{inspect(event)}")
   end
 
   defp sendcmd(state, cmd) do

@@ -717,4 +717,339 @@ defmodule EventSocketOutbound.Test.Support.SoftswitchEvent do
     ࠀࠀࠀ
     """
   end
+
+  def hangup_complete_event_part_1 do
+    """
+    Content-Length: 12123
+    Content-Type: text/event-plain
+
+    Event-Name: CHANNEL_HANGUP_COMPLETE
+    Core-UUID: efa26e2f-aaf8-4cbc-97d7-c45e7f3d1d40
+    FreeSWITCH-Hostname: Servicess-MacBook-Pro.local
+    FreeSWITCH-Switchname: Servicess-MacBook-Pro.local
+    FreeSWITCH-IPv4: 192.168.31.232
+    FreeSWITCH-IPv6: %3A%3A1
+    Event-Date-Local: 2023-04-18%2020%3A55%3A49
+    Event-Date-GMT: Tue,%2018%20Apr%202023%2017%3A55%3A49%20GMT
+    Event-Date-Timestamp: 1681840549853495
+    Event-Calling-File: switch_core_state_machine.c
+    Event-Calling-Function: switch_core_session_reporting_state
+    Event-Calling-Line-Number: 943
+    Event-Sequence: 101214
+    Hangup-Cause: ORIGINATOR_CANCEL
+    Channel-State: CS_REPORTING
+    Channel-Call-State: HANGUP
+    Channel-State-Number: 11
+    Channel-Name: sofia/internal/1000%40192.168.31.232%3A5060
+    Unique-ID: 3bb7fbe6-cd40-4c14-b92a-fe049a159c1c
+    Call-Direction: inbound
+    Presence-Call-Direction: inbound
+    Channel-HIT-Dialplan: true
+    Channel-Presence-ID: 1000%40192.168.31.232
+    Channel-Call-UUID: 3bb7fbe6-cd40-4c14-b92a-fe049a159c1c
+    Answer-State: hangup
+    Hangup-Cause: ORIGINATOR_CANCEL
+    Channel-Read-Codec-Name: opus
+    Channel-Read-Codec-Rate: 48000
+    Channel-Read-Codec-Bit-Rate: 0
+    Channel-Write-Codec-Name: opus
+    Channel-Write-Codec-Rate: 48000
+    Channel-Write-Codec-Bit-Rate: 0
+    Caller-Direction: inbound
+    Caller-Logical-Direction: inbound
+    Caller-Username: 1000
+    Caller-Dialplan: XML
+    Caller-Caller-ID-Name: 1000
+    Caller-Caller-ID-Number: 1000
+    Caller-Orig-Caller-ID-Name: 1000
+    Caller-Orig-Caller-ID-Num
+    """
+  end
+
+  def hangup_complete_event_part_2 do
+    """
+    ber: 1000
+    Caller-Network-Addr: 192.168.31.232
+    Caller-ANI: 1000
+    Caller-Destination-Number: moh
+    Caller-Unique-ID: 3bb7fbe6-cd40-4c14-b92a-fe049a159c1c
+    Caller-Source: mod_sofia
+    Caller-Transfer-Source: 1681840525%3A74db65b5-446c-491d-ab84-3c3ad84eb9c7%3Abl_xfer%3Amoh/public/XML
+    Caller-Context: public
+    Caller-RDNIS: uc_demo2
+    Caller-Channel-Name: sofia/internal/1000%40192.168.31.232%3A5060
+    Caller-Profile-Index: 2
+    Caller-Profile-Created-Time: 1681840525462979
+    Caller-Channel-Created-Time: 1681840525362929
+    Caller-Channel-Answered-Time: 0
+    Caller-Channel-Progress-Time: 0
+    Caller-Channel-Progress-Media-Time: 1681840525512927
+    Caller-Channel-Hangup-Time: 1681840549853495
+    Caller-Channel-Transfer-Time: 0
+    Caller-Channel-Resurrect-Time: 0
+    Caller-Channel-Bridged-Time: 0
+    Caller-Channel-Last-Hold: 0
+    Caller-Channel-Hold-Accum: 0
+    Caller-Screen-Bit: true
+    Caller-Privacy-Hide-Name: false
+    Caller-Privacy-Hide-Number: false
+    variable_direction: inbound
+    variable_uuid: 3bb7fbe6-cd40-4c14-b92a-fe049a159c1c
+    variable_session_id: 112
+    variable_sip_from_params: transport%3DTCP
+    variable_sip_from_user: 1000
+    variable_sip_from_port: 5060
+    variable_sip_from_uri: 1000%40192.168.31.232%3A5060
+    variable_sip_from_host: 192.168.31.232
+    variable_video_media_flow: disabled
+    variable_text_media_flow: disabled
+    variable_channel_name: sofia/internal/1000%40192.168.31.232%3A5060
+    variable_sip_call_id: tqEVxFNzFWUU28aM0TLKaA..
+    variable_sip_local_network_addr: 91.226.34.201
+    variable_sip_network_ip:
+    """
+  end
+
+  def hangup_complete_event_part_3 do
+    """
+     192.168.31.232
+    variable_sip_network_port: 62113
+    variable_sip_invite_stamp: 1681840525362919
+    variable_sip_received_ip: 192.168.31.232
+    variable_sip_received_port: 62113
+    variable_sip_via_protocol: tcp
+    variable_sip_authorized: true
+    variable_Event-Name: REQUEST_PARAMS
+    variable_Core-UUID: efa26e2f-aaf8-4cbc-97d7-c45e7f3d1d40
+    variable_FreeSWITCH-Hostname: Servicess-MacBook-Pro.local
+    variable_FreeSWITCH-Switchname: Servicess-MacBook-Pro.local
+    variable_FreeSWITCH-IPv4: 192.168.31.232
+    variable_FreeSWITCH-IPv6: %3A%3A1
+    variable_Event-Date-Local: 2023-04-18%2020%3A55%3A25
+    variable_Event-Date-GMT: Tue,%2018%20Apr%202023%2017%3A55%3A25%20GMT
+    variable_Event-Date-Timestamp: 1681840525362929
+    variable_Event-Calling-File: sofia.c
+    variable_Event-Calling-Function: sofia_handle_sip_i_invite
+    variable_Event-Calling-Line-Number: 10731
+    variable_Event-Sequence: 101151
+    variable_sip_number_alias: 1000
+    variable_sip_auth_username: 1000
+    variable_sip_auth_realm: 192.168.31.232
+    variable_number_alias: 1000
+    variable_requested_user_name: 1000
+    variable_requested_domain_name: 192.168.31.232
+    variable_record_stereo: true
+    variable_default_gateway: example.com
+    variable_default_areacode: 918
+    variable_transfer_fallback_extension: operator
+    variable_toll_allow: domestic,international,local
+    variable_accountcode: 1000
+    variable_user_context: default
+    variable_effective_caller_id_name: Extension%201000
+    variable_effective_caller_id_number: 1000
+    variable_outbound_caller_id_name: FreeSWITCH
+    """
+  end
+
+  def hangup_complete_event_part_4 do
+    """
+    variable_outbound_caller_id_number: 0000000000
+    variable_callgroup: techsupport
+    variable_user_name: 1000
+    variable_domain_name: 192.168.31.232
+    variable_sip_from_user_stripped: 1000
+    variable_sip_from_tag: debc1832
+    variable_sofia_profile_name: internal
+    variable_sofia_profile_url: sip%3Amod_sofia%4091.226.34.201%3A5060
+    variable_recovery_profile_name: internal
+    variable_sip_full_via: SIP/2.0/TCP%20192.168.31.232%3A61497%3Bbranch%3Dz9hG4bK-524287-1---42602c903f37b0f7%3Brport%3D62113
+    variable_sip_recover_via: SIP/2.0/TCP%20192.168.31.232%3A61497%3Bbranch%3Dz9hG4bK-524287-1---42602c903f37b0f7%3Brport%3D62113
+    variable_sip_full_from: %3Csip%3A1000%40192.168.31.232%3A5060%3Btransport%3DTCP%3E%3Btag%3Ddebc1832
+    variable_sip_full_to: %3Csip%3Auc_demo2%40192.168.31.232%3A5060%3E
+    variable_sip_allow: INVITE,%20ACK,%20CANCEL,%20BYE,%20NOTIFY,%20REFER,%20MESSAGE,%20OPTIONS,%20INFO,%20SUBSCRIBE
+    variable_sip_req_params: transport%3DTCP
+    variable_sip_req_user: uc_demo2
+    variable_sip_req_port: 5060
+    variable_sip_req_uri: uc_demo2%40192.168.31.232%3A5060
+    variable_sip_req_host: 192.168.31.232
+    variable_sip_to_user: uc_demo2
+    variable_sip_to_port: 5060
+    variable_sip_to_uri: uc_demo2%40192.168.31.232%3A5060
+    variable_sip_to_host: 192.168.31.232
+    variable_sip_contact_params: transport%3Dtcp
+    variable_sip_contact_user: 1000
+    variable_sip_contact_port: 61497
+    variable_sip_contact_uri: 1000%40192.168.31.232%3A61497
+    variable_sip_contact_host: 192.168.31.232
+    variable_sip_user_agen
+    """
+  end
+
+  def hangup_complete_event_part_5 do
+    """
+    t: Z%205.5.13%20v2.10.18.3
+    variable_sip_via_host: 192.168.31.232
+    variable_sip_via_port: 61497
+    variable_sip_via_rport: 62113
+    variable_presence_id: 1000%40192.168.31.232
+    variable_switch_r_sdp: v%3D0%0D%0Ao%3DZ%200%201900415750%20IN%20IP4%20192.168.31.232%0D%0As%3DZ%0D%0Ac%3DIN%20IP4%20192.168.31.232%0D%0At%3D0%200%0D%0Am%3Daudio%2060268%20RTP/AVP%20106%209%2098%20101%200%208%203%0D%0Aa%3Drtpmap%3A106%20opus/48000/2%0D%0Aa%3Dfmtp%3A106%20sprop-maxcapturerate%3D16000%3B%20minptime%3D20%3B%20useinbandfec%3D1%0D%0Aa%3Drtpmap%3A98%20telephone-event/48000%0D%0Aa%3Dfmtp%3A98%200-16%0D%0Aa%3Drtpmap%3A101%20telephone-event/8000%0D%0Aa%3Dfmtp%3A101%200-16%0D%0A
+    variable_ep_codec_string: mod_opus.opus%4048000h%4020i%402c,mod_spandsp.G722%408000h%4020i%4064000b,CORE_PCM_MODULE.PCMU%408000h%4020i%4064000b,CORE_PCM_MODULE.PCMA%408000h%4020i%4064000b
+    variable_DP_MATCH: ARRAY%3A%3ADELAYED%20NEGOTIATION%7C%3ADELAYED%20NEGOTIATION
+    variable_socket_host: 127.0.0.1
+    variable_max_forwards: 69
+    variable_transfer_history: 1681840525%3A74db65b5-446c-491d-ab84-3c3ad84eb9c7%3Abl_xfer%3Amoh/public/XML
+    variable_transfer_source: 1681840525%3A74db65b5-446c-491d-ab84-3c3ad84eb9c7%3Abl_xfer%3Amoh/public/XML
+    variable_call_uuid: 3bb7fbe6-cd40-4c14-b92a-fe049a159c1c
+    variable_outside_call: true
+    variable_RFC2822_DATE: Tue,%2018%20Apr%202023%2020%3A55%3A25%20%2B0300
+    variable_export_vars: RFC2822_DATE,RFC2822_DATE
+    variable_rtp_use_codec_string: OPUS,G722,PCMU,PCMA,H264,VP8
+    variab
+    """
+  end
+
+  def hangup_complete_event_part_6 do
+    """
+    le_remote_video_media_flow: inactive
+    variable_remote_text_media_flow: inactive
+    variable_remote_audio_media_flow: sendrecv
+    variable_audio_media_flow: sendrecv
+    variable_rtp_audio_recv_pt: 106
+    variable_rtp_use_codec_name: opus
+    variable_rtp_use_codec_fmtp: sprop-maxcapturerate%3D16000%3B%20minptime%3D20%3B%20useinbandfec%3D1
+    variable_rtp_use_codec_rate: 48000
+    variable_rtp_use_codec_ptime: 20
+    variable_rtp_use_codec_channels: 1
+    variable_rtp_last_audio_codec_string: opus%4048000h%4020i%401c
+    variable_read_codec: opus
+    variable_original_read_codec: opus
+    variable_read_rate: 48000
+    variable_original_read_rate: 48000
+    variable_write_codec: opus
+    variable_write_rate: 48000
+    variable_dtmf_type: rfc2833
+    variable_local_media_ip: 192.168.31.232
+    variable_local_media_port: 21430
+    variable_advertised_media_ip: 192.168.31.232
+    variable_rtp_use_timer_name: soft
+    variable_rtp_use_pt: 106
+    variable_rtp_use_ssrc: 197499397
+    variable_rtp_2833_send_payload: 98
+    variable_rtp_2833_recv_payload: 98
+    variable_remote_media_ip: 192.168.31.232
+    variable_remote_media_port: 60268
+    variable_endpoint_disposition: EARLY%20MEDIA
+    variable_rtp_local_sdp_str: v%3D0%0D%0Ao%3DFreeSWITCH%201681819095%201681819096%20IN%20IP4%20192.168.31.232%0D%0As%3DFreeSWITCH%0D%0Ac%3DIN%20IP4%20192.168.31.232%0D%0At%3D0%200%0D%0Am%3Daudio%2021430%20RTP/AVP%20106%2098%0D%0Aa%3Drtpmap%3A106%20opus/48000/2%0D%0Aa%3Dfmtp%3A106%20useinbandfec%3D1%3B%20minptime%3D20%0D%0Aa%3Drtpmap%3A98%20telephone-event/48000%0D%0A
+    """
+  end
+
+  def hangup_complete_event_part_7 do
+    """
+    a%3Dfmtp%3A98%200-15%0D%0Aa%3Dptime%3A20%0D%0Aa%3Dsendrecv%0D%0A
+    variable_current_application_data: tone_stream%3A//%25(2000,4000,440,480)%3Bloops%3D-1
+    variable_current_application: playback
+    variable_sip_hangup_disposition: recv_cancel
+    variable_sip_invite_failure_status: 487
+    variable_sip_invite_failure_phrase: CANCEL
+    variable_sip_term_status: 487
+    variable_proto_specific_hangup_cause: sip%3A487
+    variable_sip_term_cause: 487
+    variable_playback_last_offset_pos: 390720
+    variable_playback_seconds: 8
+    variable_playback_ms: 8389
+    variable_playback_samples: 402688
+    variable_current_application_response: PLAYBACK%20ERROR
+    variable_hangup_cause: ORIGINATOR_CANCEL
+    variable_hangup_cause_q850: 16
+    variable_digits_dialed: none
+    variable_start_stamp: 2023-04-18%2020%3A55%3A25
+    variable_profile_start_stamp: 2023-04-18%2020%3A55%3A25
+    variable_progress_media_stamp: 2023-04-18%2020%3A55%3A25
+    variable_end_stamp: 2023-04-18%2020%3A55%3A49
+    variable_start_epoch: 1681840525
+    variable_start_uepoch: 1681840525362929
+    variable_profile_start_epoch: 1681840525
+    variable_profile_start_uepoch: 1681840525462979
+    variable_answer_epoch: 0
+    variable_answer_uepoch: 0
+    variable_bridge_epoch: 0
+    variable_bridge_uepoch: 0
+    variable_last_hold_epoch: 0
+    variable_last_hold_uepoch: 0
+    variable_hold_accum_seconds: 0
+    variable_hold_accum_usec: 0
+    variable_hold_accum_ms: 0
+    variable_resurrect_epoch: 0
+    variable_resurrect_uepoch: 0
+    variable_progress_epoch: 0
+    variable_progress_uepoch: 0
+    variable_progress_me
+    """
+  end
+
+  def hangup_complete_event_part_8 do
+    """
+    dia_epoch: 1681840525
+    variable_progress_media_uepoch: 1681840525512927
+    variable_end_epoch: 1681840549
+    variable_end_uepoch: 1681840549853495
+    variable_last_app: playback
+    variable_last_arg: tone_stream%3A//%25(2000,4000,440,480)%3Bloops%3D-1
+    variable_caller_id: %221000%22%20%3C1000%3E
+    variable_duration: 24
+    variable_billsec: 0
+    variable_progresssec: 0
+    variable_answersec: 0
+    variable_waitsec: 0
+    variable_progress_mediasec: 0
+    variable_flow_billsec: 0
+    variable_mduration: 24491
+    variable_billmsec: 0
+    variable_progressmsec: 0
+    variable_answermsec: 0
+    variable_waitmsec: 0
+    variable_progress_mediamsec: 150
+    variable_flow_billmsec: 0
+    variable_uduration: 24490566
+    variable_billusec: 0
+    variable_progressusec: 0
+    variable_answerusec: 0
+    variable_waitusec: 0
+    variable_progress_mediausec: 149998
+    variable_flow_billusec: 0
+    variable_rtp_audio_in_raw_bytes: 38024
+    variable_rtp_audio_in_media_bytes: 37755
+    variable_rtp_audio_in_packet_count: 408
+    variable_rtp_audio_in_media_packet_count: 405
+    variable_rtp_audio_in_skip_packet_count: 3
+    variable_rtp_audio_in_jitter_packet_count: 0
+    variable_rtp_audio_in_dtmf_packet_count: 0
+    variable_rtp_audio_in_cng_packet_count: 0
+    variable_rtp_audio_in_flush_packet_count: 3
+    variable_rtp_audio_in_largest_jb_size: 0
+    variable_rtp_audio_in_jitter_min_variance: 0.50
+    variable_rtp_audio_in_jitter_max_variance: 1157.89
+    variable_rtp_audio_in_jitter_loss_rate: 0.00
+    variable_rtp_audio_in_jitter_burst_rate: 0.00
+    variable_rtp_audio_in_mean_interval: 59.36
+    v
+    """
+  end
+
+  def hangup_complete_event_part_9 do
+    """
+    ariable_rtp_audio_in_flaw_total: 0
+    variable_rtp_audio_in_quality_percentage: 100.00
+    variable_rtp_audio_in_mos: 4.50
+    variable_rtp_audio_out_raw_bytes: 37472
+    variable_rtp_audio_out_media_bytes: 37472
+    variable_rtp_audio_out_packet_count: 406
+    variable_rtp_audio_out_media_packet_count: 406
+    variable_rtp_audio_out_skip_packet_count: 0
+    variable_rtp_audio_out_dtmf_packet_count: 0
+    variable_rtp_audio_out_cng_packet_count: 0
+    variable_rtp_audio_rtcp_packet_count: 0
+    variable_rtp_audio_rtcp_octet_count: 0
+    """
+  end
 end

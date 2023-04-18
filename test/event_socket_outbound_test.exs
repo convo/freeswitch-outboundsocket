@@ -156,6 +156,22 @@ defmodule EventSocketOutbound.Test do
       assert_receive %{event: %{"Event-Name" => "CHANNEL_STATE"}}, 5000
     end
 
+    test "parse event plain channel_hangup_complete" do
+      # Event channel state
+      load_call_mgt_module()
+      conn_pid = start_protocol_server()
+      send(conn_pid, {:tcp, "socket", SoftswitchEvent.hangup_complete_event_part_1()})
+      send(conn_pid, {:tcp, "socket", SoftswitchEvent.hangup_complete_event_part_2()})
+      send(conn_pid, {:tcp, "socket", SoftswitchEvent.hangup_complete_event_part_3()})
+      send(conn_pid, {:tcp, "socket", SoftswitchEvent.hangup_complete_event_part_4()})
+      send(conn_pid, {:tcp, "socket", SoftswitchEvent.hangup_complete_event_part_5()})
+      send(conn_pid, {:tcp, "socket", SoftswitchEvent.hangup_complete_event_part_6()})
+      send(conn_pid, {:tcp, "socket", SoftswitchEvent.hangup_complete_event_part_7()})
+      send(conn_pid, {:tcp, "socket", SoftswitchEvent.hangup_complete_event_part_8()})
+      send(conn_pid, {:tcp, "socket", SoftswitchEvent.hangup_complete_event_part_9()})
+      assert_receive %{event: %{"Event-Name" => "CHANNEL_HANGUP_COMPLETE"}}, 5000
+    end
+
     test "parse fake event" do
       load_call_mgt_module()
       conn_pid = start_protocol_server()
