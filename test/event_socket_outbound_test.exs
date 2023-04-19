@@ -468,6 +468,7 @@ defmodule EventSocketOutbound.Test do
     {:ok, conn_pid} =
       EventProtocol.start_link(
         "ref",
+        "socket",
         EventSocketOutbound.Test.RanchTcp,
         EventSocketOutbound.Test.Ranch
       )

@@ -97,8 +97,8 @@ defmodule EventSocketOutbound.Protocol do
     GenServer.call(pid, :answer)
   end
 
-  @spec start_link(reference, module, any) :: {:ok, pid}
-  def start_link(ref, transport, module_protocol) do
+  @spec start_link(reference, :inet.socket(), module, any) :: {:ok, pid}
+  def start_link(ref, _socket, transport, module_protocol) do
     pid =
       :proc_lib.spawn_link(__MODULE__, :init, [
         ref,
@@ -192,10 +192,13 @@ defmodule EventSocketOutbound.Protocol do
     {:noreply, %{state | cmds: cmds ++ [{from, "answer"}]}}
   end
 
-  def handle_info({:tcp, _sock, data}, %{buffer: buffer} = state) do
+  def handle_info({:tcp, _sock, data}, %{transport: transport, socket: socket, buffer: buffer} = state) do
+    :ok = transport.setopts(socket, [active: false])
     aux_buffer = buffer <> data
-    new_state = parse_buffer(state, aux_buffer)
-    build_event_cb_response(new_state)
+    new_state0 = parse_buffer(state, aux_buffer)
+    new_state = build_event_cb_response(new_state0)
+    :ok = transport.setopts(socket, [active: true])
+    new_state
   end
 
   def handle_info(
@@ -391,8 +394,8 @@ defmodule EventSocketOutbound.Protocol do
   end
 
   defp event_cb(event, state) do
-    state
     Logger.error("event_cb #{inspect(event)}")
+    state
   end
 
   defp sendcmd(state, cmd) do
