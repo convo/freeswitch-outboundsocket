@@ -1,8 +1,7 @@
 defmodule EventSocketOutbound.Protocol do
   use GenServer
 
-  require Logger
- @moduledoc """
+  @moduledoc """
   Protocol handler starts a connection process and defines logic for FreeSWITCH events and protocol.
   """
   @behaviour :ranch_protocol
@@ -132,6 +131,7 @@ defmodule EventSocketOutbound.Protocol do
       disconnect: false,
       socket: socket,
       transport: transport,
+      prev_content_length: 0,
       call_mgt: call_mgt,
       call_mgt_adapter: call_mgt_adapter
     })
@@ -192,12 +192,15 @@ defmodule EventSocketOutbound.Protocol do
     {:noreply, %{state | cmds: cmds ++ [{from, "answer"}]}}
   end
 
-  def handle_info({:tcp, _sock, data}, %{transport: transport, socket: socket, buffer: buffer} = state) do
-    :ok = transport.setopts(socket, [active: false])
+  def handle_info(
+        {:tcp, _sock, data},
+        %{transport: transport, socket: socket, buffer: buffer} = state
+      ) do
+    :ok = transport.setopts(socket, active: false)
     aux_buffer = buffer <> data
     new_state0 = parse_buffer(state, aux_buffer)
     new_state = build_event_cb_response(new_state0)
-    :ok = transport.setopts(socket, [active: true])
+    :ok = transport.setopts(socket, active: true)
     new_state
   end
 
@@ -264,7 +267,7 @@ defmodule EventSocketOutbound.Protocol do
         parse_buffer(new_state, new_rest)
 
       false ->
-        %{state | buffer: old_buffer}
+        %{state | prev_content_length: content_length, buffer: old_buffer}
     end
   end
 
@@ -338,7 +341,6 @@ defmodule EventSocketOutbound.Protocol do
   end
 
   defp build_event_cb_response(%{disconnect: true} = state) do
-    Logger.debug("Disconnecting from FreeSWITCH with buffer: #{state.buffer}")
     {:stop, :shutdown, state}
   end
 
@@ -380,21 +382,38 @@ defmodule EventSocketOutbound.Protocol do
 
   defp event_cb(%{"Content-Type" => "text/event-plain"} = event, state) do
     call_mgt_adapter = state.call_mgt_adapter
-    Logger.info("text/event-plain received, called call_mgt_adapter.onEvent")
     call_mgt_adapter.onEvent(state.call_mgt, event)
     state
+  end
+
+  defp event_cb(
+         %{"Content-Type" => "text/disconnect-notice"},
+         %{prev_content_length: prev_c_length, buffer: buffer} = state
+       )
+       when byte_size(buffer) > 0 do
+    case prev_c_length > byte_size(buffer) do
+      true ->
+        state
+
+      false ->
+        Enum.each(state.cmds, fn cmd ->
+          GenServer.reply(elem(cmd, 0), {:error, "text/disconnect-notice"})
+        end)
+
+        new_state = parse_buffer(state, buffer)
+        %{new_state | disconnect: true}
+    end
   end
 
   defp event_cb(%{"Content-Type" => "text/disconnect-notice"}, state) do
     Enum.each(state.cmds, fn cmd ->
       GenServer.reply(elem(cmd, 0), {:error, "text/disconnect-notice"})
     end)
-    Logger.info("Disconnect notice received")
+
     %{state | disconnect: true}
   end
 
-  defp event_cb(event, state) do
-    Logger.error("event_cb #{inspect(event)}")
+  defp event_cb(_event, state) do
     state
   end
 
