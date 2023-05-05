@@ -194,13 +194,11 @@ defmodule EventSocketOutbound.Protocol do
 
   def handle_info(
         {:tcp, _sock, data},
-        %{transport: transport, socket: socket, buffer: buffer} = state
+        %{buffer: buffer} = state
       ) do
-    :ok = transport.setopts(socket, active: false)
     aux_buffer = buffer <> data
     new_state0 = parse_buffer(state, aux_buffer)
     new_state = build_event_cb_response(new_state0)
-    :ok = transport.setopts(socket, active: true)
     new_state
   end
 
